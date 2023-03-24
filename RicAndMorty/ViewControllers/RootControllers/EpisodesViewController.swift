@@ -9,39 +9,44 @@ import UIKit
 
 class EpisodesViewController: UIViewController {
     
-    @IBOutlet weak var tableEpisodes: UITableView!
+    @IBOutlet weak var episodesTableView: UITableView!
+    
+    var arrayEpisodes: [Episode] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        forSetBackground ()
+        setupBackground ()
         
-        requestEpisodes {
-            self.tableEpisodes.reloadData()
-            print ("Success")
+        let episodes = Networkservice ()
+        episodes.getEpisode { data in
+            self.arrayEpisodes = data
+            self.episodesTableView.reloadData()
+            
         }
+
+        episodesTableView.dataSource = self
+        episodesTableView.delegate = self
         
-        tableEpisodes.dataSource = self
-        tableEpisodes.delegate = self
     }
     // MARK: - Установка картинки на задний фон
 
-    func forSetBackground () {
+    func setupBackground () {
         let image = UIImage(named: "BackgroundPicture")
         let imageView = UIImageView(image: image)
-        tableEpisodes.backgroundView = imageView
+        episodesTableView.backgroundView = imageView
         imageView.alpha = 0.8
     }
     
     // MARK: - Функция для перехода на экран "Данные эпизода" 
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destination = segue.destination as? TheEpisodesDescriptionViewController {
-            destination.episode = arrayEpisodes[tableEpisodes.indexPathForSelectedRow!.row]
+        if let destination = segue.destination as? EpisodeDescriptionViewController {
+            destination.episode = arrayEpisodes[episodesTableView.indexPathForSelectedRow!.row]
         }
     }
 }
-// MARK: - Реализация методов протокола UITableViewDataSource
+// MARK: - Extension для реализации методов протокола UITableViewDataSource
 
 extension EpisodesViewController: UITableViewDataSource {
     
@@ -51,9 +56,9 @@ extension EpisodesViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell (withIdentifier: ClassForCellEpisodesTableViewCell.IDcell) as! ClassForCellEpisodesTableViewCell
-        cell.LableName.text = arrayEpisodes [indexPath.row].name
-        cell.LableID.text = "\(arrayEpisodes [indexPath.row].id)"
+        let cell = tableView.dequeueReusableCell (withIdentifier: EpisodesTableViewCell.IDcell) as! EpisodesTableViewCell
+        cell.episodeName.text = arrayEpisodes [indexPath.row].name
+        cell.episodeID.text = "\(arrayEpisodes [indexPath.row].id)"
         return cell
     }
     
@@ -72,7 +77,7 @@ extension EpisodesViewController: UITableViewDataSource {
     
 }
 
-// MARK: - Реализация методов протокола UITableViewDelegate
+// MARK: - Extension для реализации методов протокола UITableViewDelegate
 
 extension EpisodesViewController: UITableViewDelegate {
     

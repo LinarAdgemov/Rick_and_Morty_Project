@@ -7,10 +7,10 @@
 
 import UIKit
 
-class ClassForCellEpisodesTableViewCell: UITableViewCell {
+class EpisodesTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var LableID: UILabel!
-    @IBOutlet weak var LableName: UILabel!
+    @IBOutlet weak var episodeID: UILabel!
+    @IBOutlet weak var episodeName: UILabel!
     
     static let IDcell = "IDCell"
     

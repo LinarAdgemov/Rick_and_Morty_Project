@@ -9,21 +9,24 @@ import UIKit
 
 class CharactersViewController: UIViewController {
 
-    @IBOutlet weak var tableCharacters: UITableView!
+    @IBOutlet weak var charactersTableView: UITableView!
+    
+    var arrayCharacters: [Character] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        requestCharacters {
-            self.tableCharacters.reloadData()
-            print ("Success")
+                
+        let character = Networkservice ()
+        character.getCharacter { characters in
+            self.arrayCharacters = characters
+            self.charactersTableView.reloadData()
         }
 
-        tableCharacters.dataSource = self
-        tableCharacters.delegate = self
+        charactersTableView.dataSource = self
+        charactersTableView.delegate = self
     }
 }
-// MARK: - Реализация методов протокола UITableViewDataSource
+// MARK: - Extension для реализации методов протокола UITableViewDataSource
 
 extension CharactersViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -31,12 +34,12 @@ extension CharactersViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ClassForCellCharactersTableViewCell.IDcell) as! ClassForCellCharactersTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: CharactersTableViewCell.IDcell) as! CharactersTableViewCell
         cell.charName.text = arrayCharacters [indexPath.row].name
         cell.charImage.loadImage(urlSting: arrayCharacters [indexPath.row].image)
     
         
-        // MARK: - Реализация методов протокола UITableViewDataSource (дополнительные способы отображения картинок в tableView)
+        // MARK: - Extension для реализации методов протокола UITableViewDataSource (дополнительные способы отображения картинок в tableView)
 
 //        cell.charImage.image = UIImage(data: try! Data(contentsOf: URL(string: arrayCharacters[indexPath.row].image )!))
         
@@ -51,7 +54,7 @@ extension CharactersViewController: UITableViewDataSource {
         return cell
     }
 }
-// MARK: - Реализация методов протокола UITableViewDelegate
+// MARK: - Extension для реализации методов протокола UITableViewDelegate
 
 extension CharactersViewController: UITableViewDelegate {
 

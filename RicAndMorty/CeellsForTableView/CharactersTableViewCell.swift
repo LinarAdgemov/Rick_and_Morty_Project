@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ClassForCellCharactersTableViewCell: UITableViewCell {
+class CharactersTableViewCell: UITableViewCell {
 
     @IBOutlet weak var charImage: UIImageView!
     @IBOutlet weak var charName: UILabel!
